@@ -4,8 +4,6 @@
 
 void consumer()
 {
-	printf("inside CONSUMER\n");
-
 	char c;
 	FILE *p;
 

@@ -3,7 +3,7 @@
 #include<stdio.h>
 
 //#include<sys/types.h>
-// #include<sys/wait.h>
+//#include<sys/wait.h>
 
 #include "consumer.c"
 #include "producer.c"
@@ -19,6 +19,7 @@ int main()
 
 	int pid = fork();
 
+	fseek( r, 0, SEEK_SET);
 	char turn = fgetc(r);
 
 	if(pid == -1)
@@ -26,16 +27,15 @@ int main()
 
 	if(pid == 0) //&& turn == '0')
 	{
-		printf("producer\n");
 		producer();
 		fseek( r, 0, SEEK_SET);
 		fprintf(r,"%c", '1');
 		wait();
 	}
 
-	if(pid != 0) //&& turn != '0')
+	if(pid != 0) //&& turn == '1')
 	{
-		printf("consumer\n");
+		wait();
 		consumer();
 		fseek( r, 0, SEEK_SET);
 		fprintf(r,"%c\n", '0');
