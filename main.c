@@ -36,6 +36,7 @@ int main()
 
 		if(pid == 0 && turn == '0')
 		{
+			printf("producer");
 			ans = producer(counterP);
 			counterP++;
 			r = fopen("TURN.txt", "w");	
@@ -46,6 +47,7 @@ int main()
 
 		if(pid != 0 && turn == '1')
 		{
+			printf("consumer");
 			consumer();
 			counterC++;
 			r = fopen("TURN.txt", "w");	
@@ -57,8 +59,7 @@ int main()
 		if(ans == 1 ||pid == -1)
 			exit;
 	x++;
-	size;
-	//printf("x-%d : turn-%c : ans-%d : pid-%d : size-%d\n", x, turn, ans, pid, counterP);
+	printf("x-%d : turn-%c : ans-%d : pid-%d : size-%d\n", x, turn, ans, pid, counterP);
 	}while(counterP < size && ans != 1 && counterC < size);
 
 	return 0;
@@ -73,14 +74,9 @@ int fileSize()
 
 	file = fopen("mydata.txt", "r+");
 
-	fgetc(file);
-
-	while(!feof(file))
-	{
-		fgetc(file);
-		size++;
-	}
-
+	fseek(file, 0, SEEK_END);
+	size = ftell(file);
+	printf("SIZE: %d", size);
 	
 	fclose(file);
 

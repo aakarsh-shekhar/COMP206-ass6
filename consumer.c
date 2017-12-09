@@ -11,7 +11,7 @@ void consumer()
 
 	c = fgetc(p);
 
-	printf("%c", c);
+	printf("COUT: %c\n", c);
 
 	fclose(p);
 }
