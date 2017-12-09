@@ -1,23 +1,34 @@
 #include<stdlib.h>
 #include<unistd.h>
-#include<stdio.h>
+#include<stdio.h>	
 
-void removeChar(FILE *p);
+int producer(int i)
+{
+	int ans = 0;
 
-void producer()
-{ 
 	FILE *q;
 	FILE *buffer;
 
 	q = fopen("mydata.txt", "r");
 	buffer = fopen("DATA.txt","w");
 
+	fseek( q, i, SEEK_SET);
 	char c = fgetc(q);
-	while (!feof(q))
+
+	if(c == EOF)
+	{
+		ans = 1;
+		printf("*********************");
+	}
+
+	else
 	{
 		fprintf(buffer,"%c", c);
-		c = fgetc(q);
+		ans = 0;
 	}
+
 	fclose(buffer);
 	fclose(q);
+
+	return ans;	
 }

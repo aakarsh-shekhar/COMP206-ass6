@@ -8,41 +8,81 @@
 #include "consumer.c"
 #include "producer.c"
 
+int fileSize();
+
 int main()
 {
 
 	FILE *r;
-	r = fopen("TURN.txt", "r+w");	
 
-	fseek( r, 0, SEEK_SET);	
-	fprintf(r,"%c\n", '0');
+	r = fopen("TURN.txt", "w");	
+	fprintf(r, "%c", '0');
+	fclose(r);
+
+	int ans = 0;
+	int x=0;
+	const int size=fileSize();
+	int counterP=0;
+	int counterC=0;
+	char turn = '\0';
 
 	int pid = fork();
 
-	fseek( r, 0, SEEK_SET);
-	char turn = fgetc(r);
-
-	if(pid == -1)
-		exit(1);
-
-	if(pid == 0) //&& turn == '0')
+	do
 	{
-		producer();
-		fseek( r, 0, SEEK_SET);
-		fprintf(r,"%c", '1');
-		wait();
-	}
+		r = fopen("TURN.txt", "r+");
+		turn = fgetc(r);
+		fclose(r);
 
-	if(pid != 0) //&& turn == '1')
-	{
-		wait();
-		consumer();
-		fseek( r, 0, SEEK_SET);
-		fprintf(r,"%c\n", '0');
-		wait();
-	}
+		if(pid == 0 && turn == '0')
+		{
+			ans = producer(counterP);
+			counterP++;
+			r = fopen("TURN.txt", "w");	
+			fprintf(r,"%c", '1');
+			fclose(r);
+			wait();
+		}
 
-	fclose(r);
+		if(pid != 0 && turn == '1')
+		{
+			consumer();
+			counterC++;
+			r = fopen("TURN.txt", "w");	
+			fprintf(r,"%c", '0');
+			fclose(r);
+			wait();
+		}
+
+		if(ans == 1 ||pid == -1)
+			exit;
+	x++;
+	size;
+	//printf("x-%d : turn-%c : ans-%d : pid-%d : size-%d\n", x, turn, ans, pid, counterP);
+	}while(counterP < size && ans != 1 && counterC < size);
 
 	return 0;
+}
+
+
+int fileSize()
+{
+	int size = 0;
+
+	FILE *file;
+
+	file = fopen("mydata.txt", "r+");
+
+	fgetc(file);
+
+	while(!feof(file))
+	{
+		fgetc(file);
+		size++;
+	}
+
+	
+	fclose(file);
+
+	return size;
 }
